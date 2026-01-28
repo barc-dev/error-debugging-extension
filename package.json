@@ -1,0 +1,26 @@
+{
+  "name": "error-handling-extension",
+  "version": "1.0.0",
+  "description": "VS Code extension.",
+  "homepage": "https://github.com/jonathancabera/error-handling-extension#readme",
+  "bugs": {
+    "url": "https://github.com/jonathancabera/error-handling-extension/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathancabera/error-handling-extension.git"
+  },
+  "license": "MIT",
+  "author": "Jonathan Cabera, John Adams, Afnan Rahman, Kish Bosomtwe",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@types/react": "^19.2.10",
+    "@types/vscode": "^1.108.1",
+    "react": "^19.2.4",
+    "vscode": "^0.9.9"
+  }
+}
