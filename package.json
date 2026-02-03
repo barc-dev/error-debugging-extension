@@ -1,6 +1,26 @@
 {
   "name": "error-handling-extension",
+  "displayName": "Error Handling Extension",
   "version": "1.0.0",
+  "publisher": "error-handling-team",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "hello-world.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
   "description": "VS Code extension.",
   "homepage": "https://github.com/jonathancabera/error-handling-extension#readme",
   "bugs": {
@@ -13,14 +33,15 @@
   "license": "MIT",
   "author": "Jonathan Cabera, John Adams, Afnan Rahman, Kish Bosomtwe",
   "type": "commonjs",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install:all": "npm install && cd hello-world && npm install && cd webview-ui && npm install",
+    "build:webview": "cd hello-world/webview-ui && npm run build",
+    "compile": "npm run build:webview && node ./esbuild.js",
+    "watch": "node ./esbuild.js --watch",
+    "package": "NODE_ENV=production npm run build:webview && NODE_ENV=production node ./esbuild.js",
+    "vscode:prepublish": "npm run package"
   },
-  "dependencies": {
-    "@types/react": "^19.2.10",
-    "@types/vscode": "^1.108.1",
-    "react": "^19.2.4",
-    "vscode": "^0.9.9"
+  "devDependencies": {
+    "esbuild": "^0.27.2"
   }
 }
