@@ -1,38 +1,214 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background-color: #1e1e1e;
+  color: #cccccc;
+  font-size: 13px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.error-panel {
+  width: 100%;
+  max-width: 100%;
+  background-color: #252526;
+  padding: 16px;
+  overflow-y: auto;
   min-height: 100vh;
+}
+
+/* ErrorPanelHeader */
+.error-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.error-header h2 {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #cccccc;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+.close-btn:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* ErrorLocation */
+.error-location {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+
+/* ErrorMessage */
+.error-message {
+  background-color: rgba(244, 71, 71, 0.15);
+  border-left: 3px solid #f44747;
+  padding: 10px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+/* AIInsight */
+.ai-insight {
+  background-color: rgba(80, 160, 255, 0.1);
+  border-left: 3px solid #50a0ff;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.insight-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: #50a0ff;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.star-icon {
+  font-size: 12px;
+}
+
+.ai-insight p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* PastFix */
+.past-fix {
+  margin-bottom: 16px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #cccccc;
+}
+
+.section-icon {
+  font-size: 12px;
+}
+
+.fix-description {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.code-block {
+  background-color: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.code-block code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #d4d4d4;
+  white-space: pre;
+  display: block;
+}
+
+/* RelevantDocs */
+.relevant-docs {
+  margin-bottom: 16px;
+}
+
+.doc-link {
+  display: block;
+  color: #4fc1ff;
+  text-decoration: none;
+  margin-bottom: 6px;
+  font-size: 12px;
+  word-break: break-word;
+}
+
+.doc-link:hover {
+  text-decoration: underline;
+}
+
+/* ActionButtons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.apply-btn,
+.dismiss-btn {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.1s;
+}
+
+.apply-btn {
+  background-color: #0e639c;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.apply-btn:hover {
+  background-color: #1177bb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.dismiss-btn {
+  background-color: #3c3c3c;
+  color: #cccccc;
+}
+
+.dismiss-btn:hover {
+  background-color: #505050;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .error-panel {
+    padding: 12px;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .apply-btn,
+  .dismiss-btn {
+    width: 100%;
   }
 }
