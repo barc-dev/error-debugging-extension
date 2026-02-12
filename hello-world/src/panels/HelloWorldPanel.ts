@@ -8,17 +8,57 @@ export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
+  private readonly _editor: vscode.TextEditor | undefined;
 
-  private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+  private constructor(
+    panel: vscode.WebviewPanel,
+    extensionUri: vscode.Uri,
+    activeEditor: vscode.TextEditor | undefined,
+  ) {
     this._panel = panel;
+    this._editor = activeEditor;
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
     this._panel.webview.html = this._getWebviewContent(
       this._panel.webview,
       extensionUri,
     );
-    this._panel.webview.postMessage({
-      command: "sendErrorMessage",
-      text: "something broke",
+    this._panel.webview.onDidReceiveMessage((message: any) => {
+      const activeEditor = this._editor; //we now access the activeEditorWindow through the property of the class instance
+      if (message.command === "ready") {
+        if (activeEditor === undefined) {
+          this._panel.webview.postMessage({
+            command: "sendErrorMessage",
+            text: "No errors.",
+          });
+        } else {
+          //grabs the active editor uri (what file is the error in)
+          const activeEditorUri = activeEditor.document.uri;
+          //returns an array of diagnostics
+          const editorDiagnostics =
+            vscode.languages.getDiagnostics(activeEditorUri);
+          //filteredDiagnostics checks to make sure the diagnostic rendered to the frontend is actually an error
+          const filteredDiagnostics = editorDiagnostics.filter(
+            (diagnostic) =>
+              diagnostic.severity === vscode.DiagnosticSeverity.Error,
+          );
+          //.filter always returns an array even if its empty, empty arrays return true.
+          //to check if the array is empty, you need to check its length, not if its truthy or falsy
+          if (filteredDiagnostics.length === 0) {
+            this._panel.webview.postMessage({
+              command: "sendErrorMessage",
+              text: "No errors found.",
+            });
+            return;
+          }
+
+          this._panel.webview.postMessage({
+            command: "sendErrorMessage",
+            fileName: path.basename(activeEditor.document.fileName), //grabs the filename of the active editor
+            lineNumber: filteredDiagnostics[0].range.start.line + 1, //grabs the line of the error
+            message: filteredDiagnostics[0].message, //grabs the error message
+          });
+        }
+      }
     });
   }
 
@@ -26,6 +66,8 @@ export class HelloWorldPanel {
     if (HelloWorldPanel.currentPanel) {
       HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
     } else {
+      //active editor is moved down here because we need to capture the "snapshot" of the activeTextEditor before it's rendered in the UI
+      const activeEditor = vscode.window.activeTextEditor;
       const panel = vscode.window.createWebviewPanel(
         "hello-world",
         "Hello World",
@@ -40,7 +82,11 @@ export class HelloWorldPanel {
         },
       );
 
-      HelloWorldPanel.currentPanel = new HelloWorldPanel(panel, extensionUri);
+      HelloWorldPanel.currentPanel = new HelloWorldPanel(
+        panel,
+        extensionUri,
+        activeEditor,
+      );
     }
   }
 
@@ -61,14 +107,24 @@ export class HelloWorldPanel {
     webview: vscode.Webview,
     extensionUri: vscode.Uri,
   ) {
-    const manifestPath = path.join(extensionUri.fsPath, "webview-dist", "asset-manifest.json");
+    const manifestPath = path.join(
+      extensionUri.fsPath,
+      "webview-dist",
+      "asset-manifest.json",
+    );
     const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
 
     const cssPath = manifest.files["main.css"];
     const jsPath = manifest.files["main.js"];
 
-    const stylesUri = getUri(webview, extensionUri, ["webview-dist", ...cssPath.split("/").filter(Boolean)]);
-    const scriptUri = getUri(webview, extensionUri, ["webview-dist", ...jsPath.split("/").filter(Boolean)]);
+    const stylesUri = getUri(webview, extensionUri, [
+      "webview-dist",
+      ...cssPath.split("/").filter(Boolean),
+    ]);
+    const scriptUri = getUri(webview, extensionUri, [
+      "webview-dist",
+      ...jsPath.split("/").filter(Boolean),
+    ]);
 
     const nonce = getNonce();
 

@@ -62,22 +62,54 @@ var HelloWorldPanel = class _HelloWorldPanel {
   static currentPanel;
   _panel;
   _disposables = [];
-  constructor(panel, extensionUri) {
+  _editor;
+  constructor(panel, extensionUri, activeEditor) {
     this._panel = panel;
+    this._editor = activeEditor;
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
     this._panel.webview.html = this._getWebviewContent(
       this._panel.webview,
       extensionUri
     );
-    this._panel.webview.postMessage({
-      command: "sendErrorMessage",
-      text: "something broke"
+    this._panel.webview.onDidReceiveMessage((message) => {
+      const activeEditor2 = this._editor;
+      if (message.command === "ready") {
+        if (activeEditor2 === void 0) {
+          this._panel.webview.postMessage({
+            command: "sendErrorMessage",
+            text: "No errors."
+          });
+        } else {
+          const activeEditorUri = activeEditor2.document.uri;
+          const editorDiagnostics = vscode.languages.getDiagnostics(activeEditorUri);
+          const filteredDiagnostics = editorDiagnostics.filter(
+            (diagnostic) => diagnostic.severity === vscode.DiagnosticSeverity.Error
+          );
+          if (filteredDiagnostics.length === 0) {
+            this._panel.webview.postMessage({
+              command: "sendErrorMessage",
+              text: "No errors found."
+            });
+            return;
+          }
+          this._panel.webview.postMessage({
+            command: "sendErrorMessage",
+            fileName: path.basename(activeEditor2.document.fileName),
+            //grabs the filename of the active editor
+            lineNumber: filteredDiagnostics[0].range.start.line + 1,
+            //grabs the line of the error
+            message: filteredDiagnostics[0].message
+            //grabs the error message
+          });
+        }
+      }
     });
   }
   static render(extensionUri) {
     if (_HelloWorldPanel.currentPanel) {
       _HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
     } else {
+      const activeEditor = vscode.window.activeTextEditor;
       const panel = vscode.window.createWebviewPanel(
         "hello-world",
         "Hello World",
@@ -91,7 +123,11 @@ var HelloWorldPanel = class _HelloWorldPanel {
           ]
         }
       );
-      _HelloWorldPanel.currentPanel = new _HelloWorldPanel(panel, extensionUri);
+      _HelloWorldPanel.currentPanel = new _HelloWorldPanel(
+        panel,
+        extensionUri,
+        activeEditor
+      );
     }
   }
   dispose() {
@@ -105,12 +141,22 @@ var HelloWorldPanel = class _HelloWorldPanel {
     }
   }
   _getWebviewContent(webview, extensionUri) {
-    const manifestPath = path.join(extensionUri.fsPath, "webview-dist", "asset-manifest.json");
+    const manifestPath = path.join(
+      extensionUri.fsPath,
+      "webview-dist",
+      "asset-manifest.json"
+    );
     const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
     const cssPath = manifest.files["main.css"];
     const jsPath = manifest.files["main.js"];
-    const stylesUri = getUri(webview, extensionUri, ["webview-dist", ...cssPath.split("/").filter(Boolean)]);
-    const scriptUri = getUri(webview, extensionUri, ["webview-dist", ...jsPath.split("/").filter(Boolean)]);
+    const stylesUri = getUri(webview, extensionUri, [
+      "webview-dist",
+      ...cssPath.split("/").filter(Boolean)
+    ]);
+    const scriptUri = getUri(webview, extensionUri, [
+      "webview-dist",
+      ...jsPath.split("/").filter(Boolean)
+    ]);
     const nonce = getNonce();
     return (
       /*html*/

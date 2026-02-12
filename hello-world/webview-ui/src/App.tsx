@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { vscode } from "./utilities/vscode";
 import "./App.css";
 import ActionButtons from "./components/ActionButtons"; //props: onApply, onDismiss
 import ErrorMessage from "./components/ErrorMessage"; //props: message
@@ -9,8 +10,13 @@ import PastFix from "./components/PastFix"; //props: description, codeSnippet, t
 import RelevantDocs from "./components/RelevantDocs"; //props: docs
 
 interface errorDataTypes {
-  command: "string";
-  text: "string";
+  command: string,
+  fileName: string,
+  lineNumber: number,
+  message: string
+  // fileName: path.basename(activeEditor.document.fileName),
+  // lineNumber: filteredDiagnostics[0].range.start.line + 1,
+  // message: filteredDiagnostics[0].message
 }
 export default function App() {
   //will replace these with useState hooks to actually fetch data
@@ -34,6 +40,7 @@ export default function App() {
       url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray",
     },
   ];
+  //errorData variable holds onto error messages from useEffect
   const [errorData, setErrorData] = useState<errorDataTypes | null>(null);
 
   useEffect(() => {
@@ -44,6 +51,7 @@ export default function App() {
       }
     };
     window.addEventListener("message", handleMessage);
+    vscode.postMessage({ command: "ready" });
     return () => {
       window.removeEventListener("message", handleMessage);
     };
@@ -59,10 +67,10 @@ export default function App() {
         onClose={handleClose}
       />
       <ErrorLocation
-        fileName={mockErrorLocation.fileName}
-        lineNumber={mockErrorLocation.lineNumber}
+        fileName={errorData?.fileName ?? mockErrorLocation.fileName}
+        lineNumber={errorData?.lineNumber ?? mockErrorLocation.lineNumber}
       />
-      <ErrorMessage message={errorData?.text ?? mockErrorMessage} />
+      <ErrorMessage message={errorData?.message ?? mockErrorMessage} />
       <AiInsight aiInsight={mockAIInsight} />
       <PastFix
         description={mockPastFix.description}
