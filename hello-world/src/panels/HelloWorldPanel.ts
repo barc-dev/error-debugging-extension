@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
+import { GoogleGenAI } from "@google/genai";
 import * as fs from "fs";
 import * as path from "path";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
+import "dotenv/config";
 
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
@@ -22,7 +24,7 @@ export class HelloWorldPanel {
       this._panel.webview,
       extensionUri,
     );
-    this._panel.webview.onDidReceiveMessage((message: any) => {
+    this._panel.webview.onDidReceiveMessage(async (message: any) => {
       const activeEditor = this._editor; //we now access the activeEditorWindow through the property of the class instance
       if (message.command === "ready") {
         if (activeEditor === undefined) {
@@ -57,6 +59,24 @@ export class HelloWorldPanel {
             lineNumber: filteredDiagnostics[0].range.start.line + 1, //grabs the line of the error
             message: filteredDiagnostics[0].message, //grabs the error message
           });
+
+          try {
+            const ai = new GoogleGenAI({
+              apiKey: process.env.GEMINI_API_KEY,
+            });
+            const aiResponse = await ai.models.generateContent({
+              model: "gemini-2.0-flash",
+              contents: `Explain this TypeScript error in simple terms, and suggest a fix: ${filteredDiagnostics[0].message}
+              ${activeEditor.document.fileName}`,
+            });
+
+            this._panel.webview.postMessage({
+              command: "sendAiInsight",
+              message: aiResponse.text,
+            });
+          } catch (e) {
+            console.log("Error:", (e as Error).message);
+          }
         }
       }
     });

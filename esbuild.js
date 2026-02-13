@@ -1,4 +1,5 @@
 const { build } = require("esbuild");
+require("dotenv").config();
 
 const baseConfig = {
   bundle: true,
@@ -14,6 +15,9 @@ const extensionConfig = {
   entryPoints: ["hello-world/src/extension.ts"],
   outfile: "./out/extension.js",
   external: ["vscode"],
+  define: {
+    "process.env.GEMINI_API_KEY": JSON.stringify(process.env.GEMINI_API_KEY),
+  },
 };
 
 const watchConfig = {

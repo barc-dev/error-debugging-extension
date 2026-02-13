@@ -10,10 +10,10 @@ import PastFix from "./components/PastFix"; //props: description, codeSnippet, t
 import RelevantDocs from "./components/RelevantDocs"; //props: docs
 
 interface errorDataTypes {
-  command: string,
-  fileName: string,
-  lineNumber: number,
-  message: string
+  command: string;
+  fileName: string;
+  lineNumber: number;
+  message: string;
   // fileName: path.basename(activeEditor.document.fileName),
   // lineNumber: filteredDiagnostics[0].range.start.line + 1,
   // message: filteredDiagnostics[0].message
@@ -43,11 +43,16 @@ export default function App() {
   //errorData variable holds onto error messages from useEffect
   const [errorData, setErrorData] = useState<errorDataTypes | null>(null);
 
+  const [aiInsight, setAiInsight] = useState<string | null>(null);
+
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
       console.log(e.data);
       if (e.data.command === "sendErrorMessage") {
         setErrorData(e.data);
+      }
+      if (e.data.command === "sendAiInsight") {
+        setAiInsight(e.data.message);
       }
     };
     window.addEventListener("message", handleMessage);
@@ -71,7 +76,7 @@ export default function App() {
         lineNumber={errorData?.lineNumber ?? mockErrorLocation.lineNumber}
       />
       <ErrorMessage message={errorData?.message ?? mockErrorMessage} />
-      <AiInsight aiInsight={mockAIInsight} />
+      <AiInsight aiInsight={aiInsight ?? "Analyzing error..."} />
       <PastFix
         description={mockPastFix.description}
         codeSnippet={mockPastFix.codeSnippet}

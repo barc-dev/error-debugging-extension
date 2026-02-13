@@ -43,5 +43,10 @@
   },
   "devDependencies": {
     "esbuild": "^0.27.2"
+  },
+  "dependencies": {
+    "@google/genai": "^1.41.0",
+    "@types/node": "^25.2.3",
+    "dotenv": "^17.3.1"
   }
 }
