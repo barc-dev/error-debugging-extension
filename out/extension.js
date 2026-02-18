@@ -39575,7 +39575,7 @@ var HelloWorldPanel = class _HelloWorldPanel {
           });
           try {
             const ai = new GoogleGenAI({
-              apiKey: "AIzaSyAxyEbQg5XpjxpglbGetjn5gACACcYBB5I"
+              apiKey: "AIzaSyBS5zD-WlyOUac80z-AXRAVgtG8j1GpKWk"
             });
             const aiResponse = await ai.models.generateContent({
               model: "gemini-2.0-flash",
