@@ -7,6 +7,9 @@ interface TagSelectorProps {
   onAddCustom: (tag: string) => void;
   onRemoveCustom: (tag: string) => void;
 }
+//onToggle is a function to click an existing tag from the default list of tags
+//onAddCustom lets you ad a custom tag
+//onRemoveCustom lets you click an x on a custom tag to remove it
 
 export default function TagSelector({
   defaultTags,

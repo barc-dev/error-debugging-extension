@@ -84,14 +84,14 @@ export class HelloWorldPanel {
 
   public static render(extensionUri: vscode.Uri) {
     if (HelloWorldPanel.currentPanel) {
-      HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
+      HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.Beside);
     } else {
       //active editor is moved down here because we need to capture the "snapshot" of the activeTextEditor before it's rendered in the UI
       const activeEditor = vscode.window.activeTextEditor;
       const panel = vscode.window.createWebviewPanel(
         "hello-world",
         "Hello World",
-        vscode.ViewColumn.One,
+        vscode.ViewColumn.Beside,
         {
           // Enable javascript in the webview
           enableScripts: true,
