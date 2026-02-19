@@ -39575,7 +39575,7 @@ var HelloWorldPanel = class _HelloWorldPanel {
           });
           try {
             const ai = new GoogleGenAI({
-              apiKey: "AIzaSyBS5zD-WlyOUac80z-AXRAVgtG8j1GpKWk"
+              apiKey: "AIzaSyB6zOz-3ysHE8PQCiaUJfncWOvxPyHr7do"
             });
             const aiResponse = await ai.models.generateContent({
               model: "gemini-2.0-flash",
@@ -39595,13 +39595,13 @@ var HelloWorldPanel = class _HelloWorldPanel {
   }
   static render(extensionUri) {
     if (_HelloWorldPanel.currentPanel) {
-      _HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
+      _HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.Beside);
     } else {
       const activeEditor = vscode.window.activeTextEditor;
       const panel = vscode.window.createWebviewPanel(
         "hello-world",
         "Hello World",
-        vscode.ViewColumn.One,
+        vscode.ViewColumn.Beside,
         {
           // Enable javascript in the webview
           enableScripts: true,
@@ -39670,6 +39670,7 @@ var HelloWorldPanel = class _HelloWorldPanel {
 
 // hello-world/src/extension.ts
 function activate(context) {
+  HelloWorldPanel.render(context.extensionUri);
   const helloCommand = vscode2.commands.registerCommand(
     "hello-world.helloWorld",
     () => {

@@ -16,15 +16,17 @@ export default function RelevantDocs({ docs }: RelevantDocsProps) {
         <strong>RELEVANT DOCUMENTATION</strong>
       </div>
       {docs.map((doc, index) => {
-        return <a
-          key={index} //each rendered element in a map needs a unique key
-          className="doc-link"
-          href={doc.url}
-          target="_blank" //opens link in a new tab
-          rel="noopener noreferrer" //security best practices?
-        >
-          {doc.title}
-        </a>;
+        return (
+          <a
+            key={index} //each rendered element in a map needs a unique key
+            className="doc-link"
+            href={doc.url}
+            target="_blank" //opens link in a new tab
+            rel="noopener noreferrer" //security best practices?
+          >
+            {doc.title}
+          </a>
+        );
       })}
     </div>
   );

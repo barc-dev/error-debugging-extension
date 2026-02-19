@@ -8,6 +8,9 @@ import { HelloWorldPanel } from "./panels/HelloWorldPanel";
 // Your extension is activated the very first time the command is executed
 
 export function activate(context: vscode.ExtensionContext) {
+  // Open the panel automatically on startup
+  HelloWorldPanel.render(context.extensionUri);
+
   const helloCommand = vscode.commands.registerCommand(
     "hello-world.helloWorld",
     () => {
