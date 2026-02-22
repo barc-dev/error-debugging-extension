@@ -67,7 +67,7 @@ export default function App() {
   const [aiInsight, setAiInsight] = useState<string | null>(null);
 
   //lets you swap between the main error panel and the save fix panel
-  const [view, setView] = useState<"mainPanel" | "saveNotePanel">("mainPanel");
+  const [view, setView] =  useState<"mainPanel" | "saveNotePanel">("mainPanel");
 
   //fields within the save note panel
   const [searchText, setSearchText] = useState<string>("");

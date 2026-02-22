@@ -5,20 +5,24 @@ import * as path from "path";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import "dotenv/config";
+import GlobalStorageService from "../backend/GlobalStorageService";
 
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
+  private _storageService: GlobalStorageService;
   private readonly _editor: vscode.TextEditor | undefined;
 
   private constructor(
     panel: vscode.WebviewPanel,
     extensionUri: vscode.Uri,
     activeEditor: vscode.TextEditor | undefined,
+    storageService: GlobalStorageService,
   ) {
     this._panel = panel;
     this._editor = activeEditor;
+    this._storageService = storageService;
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
     this._panel.webview.html = this._getWebviewContent(
       this._panel.webview,
@@ -79,10 +83,26 @@ export class HelloWorldPanel {
           }
         }
       }
+      if (message.command === "saveNote")
+        await this._storageService.saveNote(message.note);
+
+      if (message.command === "deleteNote")
+        await this._storageService.deleteNote(message.index);
+
+      if (message.command === "getNotes") {
+        const notes = this._storageService.getAllNotes();
+        this._panel.webview.postMessage({
+          command: "sendAllNotes",
+          notes: notes,
+        });
+      }
     });
   }
 
-  public static render(extensionUri: vscode.Uri) {
+  public static render(
+    extensionUri: vscode.Uri,
+    storageService: GlobalStorageService,
+  ) {
     if (HelloWorldPanel.currentPanel) {
       HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.Beside);
     } else {
@@ -106,6 +126,7 @@ export class HelloWorldPanel {
         panel,
         extensionUri,
         activeEditor,
+        storageService,
       );
     }
   }

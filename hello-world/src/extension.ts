@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { HelloWorldPanel } from "./panels/HelloWorldPanel";
+import GlobalStorageService from "./backend/GlobalStorageService";
 // import { registerDiagnosticListener } from './backend/DiagnosticListener';
 
 // This method is called when your extension is activated
@@ -9,12 +10,14 @@ import { HelloWorldPanel } from "./panels/HelloWorldPanel";
 
 export function activate(context: vscode.ExtensionContext) {
   // Open the panel automatically on startup
-  HelloWorldPanel.render(context.extensionUri);
+ 
+  const globalStorageService = new GlobalStorageService(context);
+  HelloWorldPanel.render(context.extensionUri, globalStorageService);
 
   const helloCommand = vscode.commands.registerCommand(
     "hello-world.helloWorld",
     () => {
-      HelloWorldPanel.render(context.extensionUri);
+      HelloWorldPanel.render(context.extensionUri, globalStorageService);
     },
   );
 

@@ -46,7 +46,7 @@ export default function NotesPanel({
           View All
         </button>
         <button className="sf-btn sf-btn-primary" onClick={onSaveNew}>
-          Save New Fix
+          Save New Note
         </button>
       </div>
     </div>

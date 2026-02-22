@@ -19,34 +19,51 @@
         "command": "hello-world.helloWorld",
         "title": "Hello World"
       }
-    ]
-  },
-  "description": "VS Code extension.",
-  "homepage": "https://github.com/jonathancabera/error-handling-extension#readme",
-  "bugs": {
-    "url": "https://github.com/jonathancabera/error-handling-extension/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jonathancabera/error-handling-extension.git"
-  },
-  "license": "MIT",
-  "author": "Jonathan Cabera, John Adams, Afnan Rahman, Kish Bosomtwe",
-  "type": "commonjs",
-  "scripts": {
-    "install:all": "npm install && cd hello-world && npm install && cd webview-ui && npm install",
-    "build:webview": "cd hello-world/webview-ui && npm run build",
-    "compile": "npm run build:webview && node ./esbuild.js",
-    "watch": "node ./esbuild.js --watch",
-    "package": "NODE_ENV=production npm run build:webview && NODE_ENV=production node ./esbuild.js",
-    "vscode:prepublish": "npm run package"
-  },
-  "devDependencies": {
-    "esbuild": "^0.27.2"
-  },
-  "dependencies": {
-    "@google/genai": "^1.41.0",
-    "@types/node": "^25.2.3",
-    "dotenv": "^17.3.1"
+    ],
+    "viewscontainers": {
+      "error-debugger-sidebar": [
+        {
+          "id": "error-debugger-sidebar",
+          "title": "Error Insight Panel",
+          "icon": "media/error-icon.png"
+        }
+      ],
+      "views": {
+        "error-debugger-sidebar": [
+          {
+            "id": "error-debugger-view",
+            "name": "Error Insight Panel"
+          }
+        ]
+      }
+    },
+    "description": "VS Code extension.",
+    "homepage": "https://github.com/jonathancabera/error-handling-extension#readme",
+    "bugs": {
+      "url": "https://github.com/jonathancabera/error-handling-extension/issues"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jonathancabera/error-handling-extension.git"
+    },
+    "license": "MIT",
+    "author": "Jonathan Cabera, John Adams, Afnan Rahman, Kish Bosomtwe",
+    "type": "commonjs",
+    "scripts": {
+      "install:all": "npm install && cd hello-world && npm install && cd webview-ui && npm install",
+      "build:webview": "cd hello-world/webview-ui && npm run build",
+      "compile": "npm run build:webview && node ./esbuild.js",
+      "watch": "node ./esbuild.js --watch",
+      "package": "NODE_ENV=production npm run build:webview && NODE_ENV=production node ./esbuild.js",
+      "vscode:prepublish": "npm run package"
+    },
+    "devDependencies": {
+      "esbuild": "^0.27.2"
+    },
+    "dependencies": {
+      "@google/genai": "^1.41.0",
+      "@types/node": "^25.2.3",
+      "dotenv": "^17.3.1"
+    }
   }
 }
