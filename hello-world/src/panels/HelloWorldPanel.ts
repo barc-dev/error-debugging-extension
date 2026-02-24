@@ -6,6 +6,7 @@ import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import "dotenv/config";
 import GlobalStorageService from "../backend/GlobalStorageService";
+import registerDiagnosticListener from "../backend/DiagnosticListener";
 
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
@@ -19,6 +20,7 @@ export class HelloWorldPanel {
     extensionUri: vscode.Uri,
     activeEditor: vscode.TextEditor | undefined,
     storageService: GlobalStorageService,
+    context: vscode.ExtensionContext,
   ) {
     this._panel = panel;
     this._editor = activeEditor;
@@ -117,11 +119,28 @@ export class HelloWorldPanel {
         });
       }
     });
+
+    if (activeEditor) {
+      registerDiagnosticListener(context, activeEditor, (error) => {
+        if (error === null) {
+          this._panel.webview.postMessage({
+            command: "sendErrorMessage",
+            text: "No errors found.",
+          });
+        } else {
+          this._panel.webview.postMessage({
+            command: "sendErrorMessage",
+            ...error,
+          });
+        }
+      });
+    }
   }
 
   public static render(
     extensionUri: vscode.Uri,
     storageService: GlobalStorageService,
+    context: vscode.ExtensionContext,
   ) {
     if (HelloWorldPanel.currentPanel) {
       HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.Beside);
@@ -147,6 +166,7 @@ export class HelloWorldPanel {
         extensionUri,
         activeEditor,
         storageService,
+        context,
       );
     }
   }

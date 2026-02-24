@@ -1,7 +1,7 @@
 import * as path from "path"
 import * as vscode from "vscode";
 
-export function registerDiagnosticListener(
+export default function registerDiagnosticListener(
   context: vscode.ExtensionContext,
   activeEditor: vscode.TextEditor,
   onErrorChange: (

@@ -11,12 +11,12 @@ export function activate(context: vscode.ExtensionContext) {
   // Open the panel automatically on startup
  
   const globalStorageService = new GlobalStorageService(context);
-  HelloWorldPanel.render(context.extensionUri, globalStorageService);
+  HelloWorldPanel.render(context.extensionUri, globalStorageService, context);
 
   const helloCommand = vscode.commands.registerCommand(
     "hello-world.helloWorld",
     () => {
-      HelloWorldPanel.render(context.extensionUri, globalStorageService);
+      HelloWorldPanel.render(context.extensionUri, globalStorageService, context);
     },
   );
 
