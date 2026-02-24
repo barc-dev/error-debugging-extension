@@ -12,7 +12,7 @@ interface RelevantDocsProps {
 export default function RelevantDocs({ docs }: RelevantDocsProps) {
   return (
     <div className="relevant-docs">
-      <div className="section-header">
+      <div className="section-header" style={{ marginBottom: "8px" }}>
         <strong>RELEVANT DOCUMENTATION</strong>
       </div>
       {docs.map((doc, index) => {

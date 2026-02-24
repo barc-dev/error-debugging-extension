@@ -46,6 +46,7 @@ export class ErrorDebuggerPanel {
             (diagnostic) =>
               diagnostic.severity === vscode.DiagnosticSeverity.Error,
           );
+
           if (filteredDiagnostics.length === 0) {
             this._panel.webview.postMessage({
               command: "sendErrorMessage",
@@ -142,6 +143,31 @@ export class ErrorDebuggerPanel {
         }
       });
     }
+
+    context.subscriptions.push(
+      vscode.window.onDidChangeActiveTextEditor((editor) => {
+        if (!editor) {
+          return;
+        }
+        const uri = editor.document.uri;
+        const filteredDiagnostics = vscode.languages
+          .getDiagnostics(uri)
+          .filter((d) => d.severity === vscode.DiagnosticSeverity.Error);
+        if (filteredDiagnostics.length === 0) {
+          this._panel.webview.postMessage({
+            command: "sendErrorMessage",
+            text: "No errors found.",
+          });
+        } else {
+          this._panel.webview.postMessage({
+            command: "sendErrorMessage",
+            fileName: path.basename(editor.document.fileName),
+            lineNumber: filteredDiagnostics[0].range.start.line + 1,
+            message: filteredDiagnostics[0].message,
+          });
+        }
+      }),
+    );
   }
 
   public static render(
