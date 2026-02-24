@@ -93,7 +93,7 @@ export class ErrorDebuggerPanel {
             });
             const aiResponse = await ai.models.generateContent({
               model: "gemini-2.0-flash",
-              contents: `In one short paragraph (3 sentences max), explain what caused this TypeScript error and how to fix it: ${filteredDiagnostics[0].message}`,
+              contents: `In one short paragraph (3 sentences max), explain what caused this error and how to fix it: ${filteredDiagnostics[0].message}`,
             });
 
             const docsResponse = await ai.models.generateContent({
