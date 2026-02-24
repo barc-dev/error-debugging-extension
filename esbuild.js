@@ -1,5 +1,6 @@
 const { build } = require("esbuild");
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const baseConfig = {
   bundle: true,
@@ -12,8 +13,8 @@ const extensionConfig = {
   platform: "node",
   mainFields: ["module", "main"],
   format: "cjs",
-  entryPoints: ["hello-world/src/extension.ts"],
-  outfile: "./hello-world/out/extension.js",
+  entryPoints: [path.join(__dirname, "hello-world/src/extension.ts")],
+  outfile: path.join(__dirname, "hello-world/out/extension.js"),
   external: ["vscode"],
   define: {
     "process.env.API_KEY": JSON.stringify(process.env.API_KEY),
