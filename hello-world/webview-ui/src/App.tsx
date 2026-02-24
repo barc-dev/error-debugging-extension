@@ -70,8 +70,6 @@ export default function App() {
     };
   }, []);
 
-  const handleClose = () => alert("Panel closed");
-
   if (view === "viewAllNotesPanel") {
     return (
       <div className="error-panel">
@@ -182,10 +180,7 @@ export default function App() {
   //main panel
   return (
     <div className="error-panel">
-      <ErrorPanelHeader
-        panelTitle="Error Debugger"
-        onClose={handleClose}
-      />
+      <ErrorPanelHeader panelTitle="Error Debugger" />
       <ErrorLocation
         fileName={errorData?.fileName ?? ""}
         lineNumber={errorData?.lineNumber ?? 0}

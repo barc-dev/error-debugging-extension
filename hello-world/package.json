@@ -1,26 +1,36 @@
 {
   "name": "error-debugger",
   "displayName": "Error Debugger",
-  "description": "",
+  "publisher": "barcdev",
+  "description": "Detects errors in your active file, explains them with Google Gemini AI, surfaces relevant documentation, and helps you save notes about fixes.",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonathancabera/error-handling-extension"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.108.1"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": ["onStartupFinished"],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "error-debugger.analyze",
         "title": "Analyze Error"
+      },
+      {
+        "command": "error-debugger.toggle",
+        "title": "Toggle Error Debugger Panel"
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm --prefix webview-ui run build && NODE_ENV=production node ../esbuild.js",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",

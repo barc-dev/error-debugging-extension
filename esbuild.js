@@ -13,7 +13,7 @@ const extensionConfig = {
   mainFields: ["module", "main"],
   format: "cjs",
   entryPoints: ["hello-world/src/extension.ts"],
-  outfile: "./out/extension.js",
+  outfile: "./hello-world/out/extension.js",
   external: ["vscode"],
   define: {
     "process.env.API_KEY": JSON.stringify(process.env.API_KEY),
