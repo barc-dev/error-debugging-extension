@@ -3,7 +3,7 @@
   "displayName": "bark",
   "publisher": "barcdev",
   "description": "Detects errors in your active file, explains them with Google Gemini AI, surfaces relevant documentation, and helps you save notes about fixes.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/barc-dev/bark"
